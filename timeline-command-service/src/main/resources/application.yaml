@@ -1,0 +1,48 @@
+#spring:
+#  application:
+#    name: timeline-command-service
+#  cloud:
+#    function:
+#      definition: domainEventProducer
+#    stream:
+#      kafka:
+#        binder:
+#          transaction:
+#            transaction-id-prefix: ${spring.application.name}
+#          required-acks: all
+#      bindings:
+#        domain-event-producer:
+#          destination: domain-event.topic
+#      function:
+#        bindings:
+#          domainEventProducer-out-0: domain-event-producer
+#logging:
+#  level:
+#    org.springframework.transaction: TRACE
+#    org.springframework.kafka.transaction: TRACE
+#    org.springframework.kafka.producer: TRACE
+#    org.springframework.kafka.core: TRACE
+
+
+
+spring:
+  application:
+    name: timeline-command-service
+  cloud:
+    stream:
+      kafka:
+        binder:
+          transaction:
+            transaction-id-prefix: ${spring.application.name}
+          required-acks: all
+      output-bindings: domainEventProducer
+      bindings:
+        domainEventProducer:
+          destination: domain-event.topic
+
+logging:
+  level:
+    org.springframework.transaction: TRACE
+    org.springframework.kafka.transaction: TRACE
+    org.springframework.kafka.producer: TRACE
+    org.springframework.kafka.core: TRACE
