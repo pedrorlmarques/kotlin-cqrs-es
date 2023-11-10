@@ -47,6 +47,7 @@ dependencies {
     testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("org.testcontainers:mongodb")
     testImplementation("org.testcontainers:kafka")
+    testImplementation("org.awaitility:awaitility-kotlin:4.2.0")
 }
 
 dependencyManagement {

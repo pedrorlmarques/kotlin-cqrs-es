@@ -16,13 +16,10 @@ import java.util.*
 
 @DataMongoTest
 @Import(value = [TimelineEventStorePersistenceAdapter::class, TestTimelineCommandServiceApplication::class, TestcontainersPropertySourceAutoConfiguration::class])
-class TimelineEventStorePersistenceAdapterTest {
-
-    @Autowired
-    lateinit var timelineEventStorePersistenceAdapter: TimelineEventStorePersistenceAdapter
-
-    @Autowired
-    lateinit var mongoTemplate: MongoTemplate
+class TimelineEventStorePersistenceAdapterTest(
+    @Autowired val timelineEventStorePersistenceAdapter: TimelineEventStorePersistenceAdapter,
+    @Autowired val mongoTemplate: MongoTemplate
+) {
 
     @Test
     fun testGivenAggregateIdItShouldReturnAllTheEvents() {
