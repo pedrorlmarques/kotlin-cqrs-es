@@ -34,8 +34,8 @@ class DeleteTimelineServiceTest {
     @Test
     fun testGivenTimelineIdItShouldMarkAsInactiveAndClearAllContent() {
 
-        val timelineId = UUID.randomUUID().toString()
-        val command = DeleteTimelineCommand(AggregateId(timelineId))
+        val timelineId = AggregateId("1")
+        val command = DeleteTimelineCommand(timelineId)
 
         val song = Song(
             SongId(UUID.randomUUID().toString()),
@@ -46,8 +46,8 @@ class DeleteTimelineServiceTest {
         val songTimelineContent = TimelineContent.SongTimelineContent(song)
 
         val existingEvents = mutableListOf(
-            TimelineCreatedEvent(songTimelineContent),
-            TimelineContentAddedEvent(songTimelineContent),
+            TimelineCreatedEvent(songTimelineContent, command.timelineId),
+            TimelineContentAddedEvent(songTimelineContent, command.timelineId),
         )
 
         every { loadTimelineEventsPort.load(command.timelineId) } returns existingEvents

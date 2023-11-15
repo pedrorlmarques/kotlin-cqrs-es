@@ -4,6 +4,7 @@ import io.waketunes.TestTimelineCommandServiceApplication
 import io.waketunes.TimelineCommandServiceApplication
 import io.waketunes.application.domain.event.TimelineCreatedEvent
 import io.waketunes.application.domain.model.*
+import io.waketunes.application.domain.model.TimelineContent.SongTimelineContent
 import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.assertj.core.api.Assertions.assertThat
 import org.awaitility.kotlin.await
@@ -25,15 +26,16 @@ class KafkaMessagingAdapterTest(
     @Test
     fun testGivenNonCommittedEventsItShouldSendToKafka() {
 
+        val timelineId = AggregateId("1")
         val song = Song(
             SongId(UUID.randomUUID().toString()),
             SongName("yellow"),
             SongSource(url = URL("http://localhost:8080"))
         )
 
-        val yellowOneContent = TimelineContent.SongTimelineContent(song)
+        val yellowOneContent = SongTimelineContent(song)
 
-        val nonCommittedEvents = mutableListOf(TimelineCreatedEvent(yellowOneContent))
+        val nonCommittedEvents = mutableListOf(TimelineCreatedEvent(yellowOneContent, timelineId))
 
         kafkaMessagingAdapter.send(nonCommittedEvents)
 

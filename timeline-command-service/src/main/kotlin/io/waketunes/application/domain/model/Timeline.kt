@@ -9,7 +9,7 @@ class Timeline private constructor(id: AggregateId) : AggregateRoot(id) {
     companion object {
         fun createTimeline(id: UUID, content: TimelineContent): Timeline {
             return Timeline(AggregateId(id.toString())).apply {
-                fireEvent(TimelineCreatedEvent(content))
+                fireEvent(TimelineCreatedEvent(content, this.id))
             }
         }
 
@@ -30,7 +30,7 @@ class Timeline private constructor(id: AggregateId) : AggregateRoot(id) {
     fun addContent(content: TimelineContent) {
         require(active) { "Timeline doesn't exist" }
         require(timelineContents.isNotEmpty()) { "Timeline not created" }
-        fireEvent(TimelineContentAddedEvent(content))
+        fireEvent(TimelineContentAddedEvent(content, this.id))
     }
 
     fun removeContent(id: TimelineContentId) {
@@ -38,7 +38,7 @@ class Timeline private constructor(id: AggregateId) : AggregateRoot(id) {
         val content = timelineContents.firstOrNull { it.id == id }
             ?: throw RuntimeException("Content doesn't exist")
 
-        fireEvent(TimelineContentRemovedEvent(content))
+        fireEvent(TimelineContentRemovedEvent(content.id, this.id))
     }
 
     fun deleteTimeLine(id: AggregateId) {
@@ -54,7 +54,7 @@ class Timeline private constructor(id: AggregateId) : AggregateRoot(id) {
             }
 
             is TimelineContentAddedEvent -> timelineContents.add(event.content)
-            is TimelineContentRemovedEvent -> timelineContents.remove(event.content)
+            is TimelineContentRemovedEvent -> timelineContents.removeIf { it.id == event.timelineContentId }
             is TimelineDeletedEvent -> {
                 active = false
                 timelineContents.clear()

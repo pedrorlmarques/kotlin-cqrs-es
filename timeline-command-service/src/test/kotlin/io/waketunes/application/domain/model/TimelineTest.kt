@@ -11,6 +11,10 @@ class TimelineTest {
 
     @Test
     fun testGivenSongContentItShouldCreateSongTimeLineWithContentAndTimeLineCreatedEventIsFired() {
+
+        val timeLineIdValue = UUID.randomUUID()
+        val timelineId = AggregateId(timeLineIdValue.toString())
+
         val songTimeLineContent = TimelineContent.SongTimelineContent(
             Song(
                 SongId(UUID.randomUUID().toString()),
@@ -19,13 +23,11 @@ class TimelineTest {
             )
         )
 
-        val aggregateId = UUID.randomUUID()
-
-        val songTimeLine = Timeline.createTimeline(aggregateId, songTimeLineContent)
+        val songTimeLine = Timeline.createTimeline(timeLineIdValue, songTimeLineContent)
 
         assertThat(songTimeLine).isNotNull
         assertThat(songTimeLine.uncommittedEvents()).isNotEmpty.containsExactly(
-            TimelineCreatedEvent(songTimeLineContent)
+            TimelineCreatedEvent(songTimeLineContent, timelineId)
         )
         assertThat(songTimeLine.timelineContents).isNotEmpty.containsExactly(songTimeLineContent)
     }

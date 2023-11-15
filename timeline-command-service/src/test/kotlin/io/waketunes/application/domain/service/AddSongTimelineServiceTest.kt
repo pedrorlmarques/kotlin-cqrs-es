@@ -41,13 +41,14 @@ class AddSongTimelineServiceTest {
         )
 
         val songTimelineContent = SongTimelineContent(song)
+        val timelineId = AggregateId("1")
 
         val existingEvents = mutableListOf(
-            TimelineCreatedEvent(songTimelineContent),
-            TimelineContentAddedEvent(songTimelineContent),
+            TimelineCreatedEvent(songTimelineContent, timelineId),
+            TimelineContentAddedEvent(songTimelineContent, timelineId),
         )
 
-        val command = AddSongTimelineCommand(AggregateId("1"), song)
+        val command = AddSongTimelineCommand(timelineId, song)
 
         every { loadTimelineEventsPort.load(command.timelineId) } returns existingEvents
         every { saveTimelineEventsPort.save(any(), any()) } returns Unit

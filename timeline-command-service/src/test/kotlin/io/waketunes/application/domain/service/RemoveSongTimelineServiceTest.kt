@@ -40,16 +40,17 @@ class RemoveSongTimelineServiceTest {
             SongSource(url = URL("http://localhost:8080"))
         )
 
+        val timelineId = AggregateId("1")
         val yellowOneContent = SongTimelineContent(song)
         val yellowTwoContent = SongTimelineContent(song)
 
 
         val existingEvents = mutableListOf(
-            TimelineCreatedEvent(yellowOneContent),
-            TimelineContentAddedEvent(yellowTwoContent),
+            TimelineCreatedEvent(yellowOneContent, timelineId),
+            TimelineContentAddedEvent(yellowTwoContent, timelineId),
         )
 
-        val command = RemoveSongTimelineCommand(TimelineContentId(yellowOneContent.id.value), AggregateId("1"))
+        val command = RemoveSongTimelineCommand(TimelineContentId(yellowOneContent.id.value), timelineId)
 
         every { loadTimelineEventsPort.load(command.timelineId) } returns existingEvents
         every { saveTimelineEventsPort.save(any(), any()) } returns Unit

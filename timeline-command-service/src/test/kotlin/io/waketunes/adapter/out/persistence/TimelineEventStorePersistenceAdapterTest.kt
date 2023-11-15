@@ -33,7 +33,7 @@ class TimelineEventStorePersistenceAdapterTest(
                     SongName("yellow"),
                     SongSource(url = URL("http://localhost:8080"))
                 )
-            )
+            ), aggregateId
         )
 
         val expectedEvent = EventModel(
